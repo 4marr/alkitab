@@ -12,6 +12,7 @@ fetch(api)
     })
     .then((data) => {
         console.log(data);
+        loader.style.display = "none";
         for (var i = 0; i < data.data.length; i++) {
             let kitabId = data.data[i].id;
             let suratsName = data.data[i].name;
