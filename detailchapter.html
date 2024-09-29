@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Qur'an Web</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.alif.my.id/alquran/assets/LPMQ.ttf">
+</head>
+
+<body>
+    <nav>
+        <h3 id="judul-surat-header">Alkitab Bible</h3>
+    </nav>
+    <div class="div-info">
+        <div id="div-judul" style="margin-top: 70px;"><h2>Something great here is being created.</h2></div>
+    </div>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/ring.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const suratsId = urlParams.get('surah');
+        const chapterId = urlParams.get('chapter');
+        var api = `https://api-alkitab.vercel.app/api/passage?passage=${suratsId}&num=${chapterId}`;
+    </script>
+
+</body>
+
+</html>

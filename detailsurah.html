@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al-Quran Web</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <l-ring size="40" stroke="5" bg-opacity="0.05" speed="2" color="black" id="loader"></l-ring>
+    <nav>
+        <i class='bx bx-arrow-back' style="display: none;" onclick="refresh()"></i>
+        <h3 id="judul-surat-header">Alkitab Bible</h3>
+    </nav>
+    <ul class="listContainerSearch" id="listContainerSearch">
+
+    </ul>
+
+    <ul id="listContainerChapter" class="list-container-chapter">
+
+    </ul>
+
+    <script type="module" src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/ring.js"></script>
+    <script>
+        var loader = document.getElementById("loader");
+
+        window.addEventListener("load", function () {
+            loader.style.display = "none";
+        });
+        const urlParams = new URLSearchParams(window.location.search);
+        const countChapter = urlParams.get('countChapter');
+        const kitabId = urlParams.get('surah');
+        const suratName = urlParams.get('suratName');
+        document.getElementById("judul-surat-header").innerHTML = suratName;
+        function generateChapter() {
+
+            for (var i = 1; i <= countChapter; i++) {
+                var li = document.createElement("li");
+                li.classList.add("list-chapter");
+                var divSubJudul = document.createElement("div");
+                divSubJudul.classList.add("chapter-more-info");
+                var namaSurats = document.createElement("h2");
+                namaSurats.classList.add("nama-surat");
+                namaSurats.innerHTML = suratName;
+                var chapterSurats = document.createElement("a");
+                chapterSurats.classList.add("chapter-surat-more");
+                chapterSurats.innerHTML = i;
+                chapterSurats.href = `detailchapter.html?surah=${kitabId}&chapter=${i}`
+
+                divSubJudul.append(chapterSurats);
+                var divCont = document.createElement("div");
+                divCont.classList.add("div-container-chapter");
+                li.append(divSubJudul);
+                divCont.append(li)
+                listContainerChapter.append(divCont);
+
+            }
+        }
+        generateChapter()
+    </script>
+</body>
+
+</html>
