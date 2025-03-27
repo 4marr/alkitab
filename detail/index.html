@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alkitab Bible</title>
+    <link rel="stylesheet" href="../public/css/style.css">
+    <link rel="stylesheet" href="../public/css/custom.css">
+</head>
+
+<body class="bg-slate-900 text-white">
+    <header id="header" class="fixed top-0 w-full h-16 bg-slate-900">
+        <div class="max-w-screen-lg h-full mx-auto px-5">
+            <div class="relative flex justify-between items-center h-full w-full">
+                <div class="flex items-center gap-4 font-bold text-sm">
+                    <div>
+                        <img src="../public/img/logo.svg" alt="logo" class="w-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="flex items-center justify-center h-full w-full px-5 min-h-screen overflow-hidden mt-20 pb-10">
+        <div class="max-w-screen-lg w-full">
+            <section class="flex w-full mt-4 justify-center">
+                <div id="container" class="w-screen flex flex-col gap-2 text-gray-300">
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const suratName = urlParams.get('suratName');
+        const chapterId = parseInt(urlParams.get('chapter')); // Pastikan ini adalah angka
+        var api = `https://fastrestapis.fasturl.cloud/religious/alkitab?version=tb&book=${suratName}&chapter=${chapterId}`;
+
+        fetch(api)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Network response was not ok " + res.statusText);
+                }
+                return res.json();
+            })
+            .then((data) => {
+                console.log(data);
+                let result = ""; // Inisialisasi variabel result sebagai string kosong
+                result += `
+                    <h2 class="text-center text-2xl font-bold mb-4">${data.result.book}</h2>
+                    <h3 class="text-xl font-bold">${data.result.book} ${data.result.chapter}</h3>
+                `;
+                for (var i = 0; i < data.result.verses.length; i++) {
+                    let content = data.result.verses[i].content;
+                    let verse = data.result.verses[i].verse;
+                    result += `
+                        <p><span class="font-semibold">${verse}.</span> ${content}</p>
+                    `;
+                }
+
+                // Tambahkan tombol ke bab berikutnya
+                const nextChapterId = chapterId + 1;
+                result += `
+                    <div class="mt-8 text-center">
+                        <a href="/detail/index.html?suratName=${suratName}&chapter=${nextChapterId}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="36" viewBox="0 0 12 24"><path fill="currentColor" fill-rule="evenodd" d="M10.157 12.711L4.5 18.368l-1.414-1.414l4.95-4.95l-4.95-4.95L4.5 5.64l5.657 5.657a1 1 0 0 1 0 1.414"/></svg>
+                        </a>
+                    </div>
+                `;
+
+                document.getElementById("container").innerHTML = result;
+            })
+            .catch((error) => {
+                console.error("There was a problem with the fetch operation:", error);
+                document.getElementById("container").innerHTML = `
+                    <div class="text-red-500 text-center">
+                        Failed to load data. Please try again later.
+                    </div>
+                `;
+            });
+    </script>
+</body>
+
+</html>

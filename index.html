@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alkitab Bible</title>
+    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="public/css/custom.css">
+</head>
+
+<body class="bg-slate-900 text-white">
+    <header id="header" class="fixed top-0 w-full h-16 bg-slate-900">
+        <div class="max-w-screen-lg h-full mx-auto px-5">
+            <div class="relative flex justify-between items-center h-full w-full">
+                <div class="flex items-center gap-4 font-bold text-sm">
+                    <div>
+                        <img src="public/img/logo.svg" alt="logo" class="w-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="flex items-center justify-center h-full w-full px-5 min-h-screen overflow-hidden mt-20 pb-10">
+        <div class="max-w-screen-lg w-full">
+            <section class="flex w-full mt-4 justify-center">
+                <div id="container" class="w-screen grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="modal" class="hidden fixed inset-0 bg-black/40 bg-opacity-50 items-center justify-center">
+        <div class="bg-slate-800 p-6 rounded-lg w-96 overflow-y-scroll">
+            <h2 id="modal-title" class="text-lg text-center text-gray-300 font-bold mb-4">Chapters</h2>
+            <div id="modal-content" class="grid grid-cols-4 gap-2"></div>
+            <p class="flex items-center text-xs mt-8">Press <span class="border border-white rounded py-0.5 px-1 mx-1">ESC</span> key or click outside to close</p>
+        </div>
+    </div>
+
+    <script>
+        var api = "https://api-alkitab.vercel.app/api/book";
+
+        fetch(api)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Network response was not ok " + res.statusText);
+                }
+                return res.json();
+            })
+            .then((data) => {
+                console.log(data);
+                let result = ""; // Inisialisasi variabel result sebagai string kosong
+                for (var i = 0; i < data.data.length; i++) {
+                    let kitabId = data.data[i].id;
+                    let suratsName = data.data[i].name;
+                    let countChapter = data.data[i].chapter;
+
+                    result += `
+                        <button onclick="showModal('${suratsName}', ${countChapter})" class="bg-sky-500 hover:bg-green-500 text-slate-800 p-4 rounded-lg font-semibold text-center transition-all duration-300 ease-in-out">
+                            ${suratsName}
+                        </button>
+                    `;
+                }
+                document.getElementById("container").innerHTML = result;
+            })
+            .catch((error) => {
+                console.error("There was a problem with the fetch operation:", error);
+                document.getElementById("container").innerHTML = `
+                    <div class="text-red-500 text-center">
+                        Failed to load data. Please try again later.
+                    </div>
+                `;
+            });
+
+        function showModal(suratName, countChapter) {
+            const modal = document.getElementById("modal");
+            const modalTitle = document.getElementById("modal-title");
+            const modalContent = document.getElementById("modal-content");
+
+            // Set title and content
+            modalTitle.textContent = `${suratName}`;
+            modalContent.innerHTML = ""; // Clear previous content
+
+            // Generate chapter numbers
+            for (let i = 1; i <= countChapter; i++) {
+            const chapterLink = document.createElement("a");
+            chapterLink.textContent = i;
+            chapterLink.href = `/detail/index.html?suratName=${suratName}&chapter=${i}`;
+            chapterLink.className = "border border-gray-200 text-white p-2 rounded-lg block text-center";
+            modalContent.appendChild(chapterLink);
+        }
+
+            // Show modal
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+
+            // Add event listener for closing modal on Esc key
+            document.addEventListener("keydown", handleKeyDown);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("modal");
+            modal.classList.add("hidden");
+
+            // Remove event listener for Esc key
+            document.removeEventListener("keydown", handleKeyDown);
+        }
+
+        function handleKeyDown(event) {
+            if (event.key === "Escape") {
+                closeModal();
+            }
+        }
+
+        // Close modal when clicking outside the modal content
+        document.getElementById("modal").addEventListener("click", function (event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

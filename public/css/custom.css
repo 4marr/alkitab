@@ -1,0 +1,13 @@
+    #modal > div {
+        max-height: 90vh; /* Batasi tinggi modal agar tidak melebihi 90% dari tinggi viewport */
+        overflow-y: auto; /* Aktifkan scroll di dalam modal jika konten terlalu panjang */
+    }
+
+    #modal div {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* Internet Explorer 10+ */
+    }
+
+    #modal div::-webkit-scrollbar{
+        display: none; /* Safari and Chrome */
+    }
