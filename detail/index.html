@@ -32,9 +32,9 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const suratName = urlParams.get('suratName');
+        const passage = urlParams.get('passage');
         const chapterId = parseInt(urlParams.get('chapter')); // Pastikan ini adalah angka
-        var api = `https://fastrestapis.fasturl.cloud/religious/alkitab?version=tb&book=${suratName}&chapter=${chapterId}`;
+        var api = `https://fastrestapis.fasturl.cloud/religious/alkitab?version=tb&book=${passage}&chapter=${chapterId}`;
 
         fetch(api)
             .then((res) => {
@@ -62,7 +62,7 @@
                 const nextChapterId = chapterId + 1;
                 result += `
                     <div class="mt-8 text-center">
-                        <a href="/detail/index.html?suratName=${suratName}&chapter=${nextChapterId}">
+                        <a href="/detail/index.html?passage=${passage}&chapter=${nextChapterId}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="36" viewBox="0 0 12 24"><path fill="currentColor" fill-rule="evenodd" d="M10.157 12.711L4.5 18.368l-1.414-1.414l4.95-4.95l-4.95-4.95L4.5 5.64l5.657 5.657a1 1 0 0 1 0 1.414"/></svg>
                         </a>
                     </div>
